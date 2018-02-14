@@ -57,8 +57,8 @@ class ServerBackup extends PluginBase{
 		}
 		self::$now++;
 		if(self::$now>self::$count){
-			self::savaZip();
 			self::$server->getScheduler()->cancelTasks($this);
+			self::saveZip();
 		}
 		return;
 	}
