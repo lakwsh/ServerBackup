@@ -11,6 +11,7 @@ class ServerBackup extends PluginBase{
 	/** @var $server \pocketmine\plugin\PluginLogger */
 	private static $logger;
 	private static $count;
+	private static $taskId;
 	private static $subPos;
 	private static $basePath;
 	private static $now=0;
@@ -44,7 +45,7 @@ class ServerBackup extends PluginBase{
 			return false;
 		}
 		$logger->warning('正在备份服务器');
-		$server->getScheduler()->scheduleRepeatingTask(new CallbackTask([$this,'onTask']),$tick);
+		self::$taskId=$server->getScheduler()->scheduleRepeatingTask(new CallbackTask([$this,'onTask']),$tick)->getTaskId();
 		return true;
 	}
 	public function onTask(){
@@ -55,8 +56,8 @@ class ServerBackup extends PluginBase{
 		}
 		self::$now++;
 		if(self::$now>=self::$count){
+			self::$server->getScheduler()->cancelTask(self::$taskId);
 			self::$zip->close();
-			self::$server->getScheduler()->cancelTasks($this);
 			self::$logger->warning('服务器备份完毕');
 		}
 		return;

@@ -1,7 +1,7 @@
 name: ServerBackup
 main: lakwsh\ServerBackup
 version: 2
-load: STARTUP
+load: POSTWORLD
 author: lakwsh
 website: https://lakwsh.net
 api:
