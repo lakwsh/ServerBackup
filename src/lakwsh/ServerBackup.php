@@ -14,13 +14,14 @@ class ServerBackup extends PluginBase{
 	private static $subPos;
 	private static $basePath;
 	private static $now=0;
+	private static $tip=false;
 	private static $fileList=array();
 	public function onEnable(){
 		self::$server=$this->getServer();
 		self::$logger=$this->getLogger();
 		self::onRun();
 	}
-	private function onRun($quick=false,$tick=5){
+	private function onRun($tick=5){
 		$server=self::$server;
 		$logger=self::$logger;
 		self::$basePath=$server->getDataPath();
@@ -43,28 +44,21 @@ class ServerBackup extends PluginBase{
 			return false;
 		}
 		$logger->warning('正在备份服务器');
-		if($quick){
-			foreach(self::$fileList as $file) self::$zip->addFile($file,substr($file,self::$subPos));
-			self::saveZip();
-		}else{$server->getScheduler()->scheduleRepeatingTask(new CallbackTask([$this,'onTask']),$tick);}
+		$server->getScheduler()->scheduleRepeatingTask(new CallbackTask([$this,'onTask']),$tick);
 		return true;
 	}
 	public function onTask(){
 		$file=self::$fileList[self::$now];
 		if(file_exists($file)){
-			self::$logger->notice('正在压缩: '.$file);
+			if(self::$tip) self::$logger->notice('正在压缩: '.$file);
 			self::$zip->addFile($file,substr($file,self::$subPos));
 		}
 		self::$now++;
-		if(self::$now>self::$count){
+		if(self::$now>=self::$count){
+			self::$zip->close();
 			self::$server->getScheduler()->cancelTasks($this);
-			self::saveZip();
+			self::$logger->warning('服务器备份完毕');
 		}
-		return;
-	}
-	private function saveZip(){
-		self::$zip->close();
-		self::$logger->warning('服务器备份完毕');
 		return;
 	}
 }
