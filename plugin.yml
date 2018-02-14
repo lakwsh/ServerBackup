@@ -1,6 +1,6 @@
 name: ServerBackup
 main: lakwsh\ServerBackup
-version: 1
+version: 2
 load: STARTUP
 author: lakwsh
 website: https://lakwsh.net
