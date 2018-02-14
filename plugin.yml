@@ -1,0 +1,10 @@
+name: ServerBackup
+main: lakwsh\ServerBackup
+version: 1
+load: STARTUP
+author: lakwsh
+website: https://lakwsh.net
+api:
+ - 1.0.0
+ - 2.0.0
+ - 3.0.0
