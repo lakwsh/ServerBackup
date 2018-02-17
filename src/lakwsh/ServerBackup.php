@@ -1,7 +1,9 @@
 <?php
 namespace lakwsh;
+use pocketmine\command\{Command,CommandSender,ConsoleCommandSender};
 use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\CallbackTask;
+use pocketmine\utils\TextFormat;
 
 class ServerBackup extends PluginBase{
 	/** @var $zip \ZipArchive */
@@ -20,9 +22,22 @@ class ServerBackup extends PluginBase{
 	public function onEnable(){
 		self::$server=$this->getServer();
 		self::$logger=$this->getLogger();
-		self::onRun();
 	}
-	private function onRun($tick=5){
+	public function onCommand(CommandSender $sender,Command $command,$label,array $args){
+		if(!($sender instanceof ConsoleCommandSender)){
+			$sender->sendMessage(TextFormat::RED.'此命令只能在控制台使用');
+			return true;
+		}
+		if(!isset($args[0])) return false;
+		if(isset($args[1])) self::$tip=true;
+		else self::$tip=false;
+		if(is_int($args[0]) and $args[0]>0){
+			self::backup($args[0]);
+			return true;
+		}
+		return false;
+	}
+	private function backup($tick=5){
 		$server=self::$server;
 		$logger=self::$logger;
 		self::$basePath=$server->getDataPath();

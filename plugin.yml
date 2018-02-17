@@ -1,6 +1,6 @@
 name: ServerBackup
 main: lakwsh\ServerBackup
-version: 2
+version: 3
 load: POSTWORLD
 author: lakwsh
 website: https://lakwsh.net
@@ -8,3 +8,14 @@ api:
  - 1.0.0
  - 2.0.0
  - 3.0.0
+
+commands:
+ backup:
+  usage: "/backup <延时> (<是否显示进度>)"
+  permission: ServerBackup.backup
+  description: "备份服务器"
+permissions:
+ ServerBackup:
+  default: false
+   ServerBackup.backup:
+    default: op
