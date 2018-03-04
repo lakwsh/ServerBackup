@@ -34,8 +34,9 @@ class ServerBackup extends PluginBase{
 		}
 		if(isset($args[1])) self::$tip=true;
 		else self::$tip=false;
-		if(is_int($args[0]) and $args[0]>0){
-			self::backup($args[0]);
+		$delay=(int)$args[0];
+		if($delay>0 and $delay<999){
+			self::backup($delay);
 			return true;
 		}
 		return false;

@@ -1,6 +1,6 @@
 name: ServerBackup
 main: lakwsh\ServerBackup
-version: 4
+version: 5
 load: POSTWORLD
 author: lakwsh
 website: https://lakwsh.net
