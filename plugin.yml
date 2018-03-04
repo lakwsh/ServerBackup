@@ -17,5 +17,5 @@ commands:
 permissions:
  ServerBackup:
   default: false
-   ServerBackup.backup:
-    default: op
+  ServerBackup.backup:
+   default: op
