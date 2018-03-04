@@ -22,6 +22,7 @@ class ServerBackup extends PluginBase{
 	public function onEnable(){
 		self::$server=$this->getServer();
 		self::$logger=$this->getLogger();
+		self::$basePath=self::$server->getDataPath();
 	}
 	public function onCommand(CommandSender $sender,Command $command,$label,array $args){
 		if(!($sender instanceof ConsoleCommandSender)){
@@ -35,21 +36,20 @@ class ServerBackup extends PluginBase{
 		if(isset($args[1])) self::$tip=true;
 		else self::$tip=false;
 		$delay=(int)$args[0];
-		if($delay>0 and $delay<999){
+		if($delay>0 and $delay<1000){
 			self::backup($delay);
 			return true;
 		}
 		return false;
 	}
 	private function backup($tick=5){
-		$server=self::$server;
 		$logger=self::$logger;
-		self::$basePath=$server->getDataPath();
 		$basePath=self::$basePath;
 		self::$subPos=strlen($basePath);
 		foreach(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($basePath)) as $file){
 			$path=ltrim(str_replace(["\\",$basePath],['/',''],$file),'/');
-			if($path{0}==='.' or stripos($path,'/.')!==false) continue;
+			$filename=$file->getBasename();
+			if($filename{0}=='.') continue;
 			self::$fileList[]=$path;
 		}
 		self::$count=count(self::$fileList);
@@ -64,7 +64,7 @@ class ServerBackup extends PluginBase{
 			return false;
 		}
 		$logger->warning('正在备份服务器');
-		self::$taskId=$server->getScheduler()->scheduleRepeatingTask(new CallbackTask([$this,'onTask']),$tick)->getTaskId();
+		self::$taskId=self::$server->getScheduler()->scheduleRepeatingTask(new CallbackTask([$this,'onTask']),$tick)->getTaskId();
 		return true;
 	}
 	public function onTask(){
@@ -76,6 +76,7 @@ class ServerBackup extends PluginBase{
 		self::$now++;
 		if(self::$now>=self::$count){
 			self::$server->getScheduler()->cancelTask(self::$taskId);
+			self::$logger->notice('正在创建压缩文件,请耐心等待');
 			self::$zip->close();
 			self::$logger->warning('服务器备份完毕');
 		}
