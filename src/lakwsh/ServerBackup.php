@@ -28,7 +28,10 @@ class ServerBackup extends PluginBase{
 			$sender->sendMessage(TextFormat::RED.'此命令只能在控制台使用');
 			return true;
 		}
-		if(!isset($args[0])) return false;
+		if(!isset($args[0])){
+			self::backup();
+			return true;
+		}
 		if(isset($args[1])) self::$tip=true;
 		else self::$tip=false;
 		if(is_int($args[0]) and $args[0]>0){
