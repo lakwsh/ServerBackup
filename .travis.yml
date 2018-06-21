@@ -4,7 +4,7 @@ php:
   - 7.0
 script:
   - echo | pecl install channel://pecl.php.net/yaml-2.0.2
-  - wget https://raw.githubusercontent.com/lakwsh/DevTools-lakwsh/master/src/DevTools/ConsoleScript.php
+  - wget https://raw.githubusercontent.com/lakwsh/DevTools-lakwsh/master/ConsoleScript.php
   - php -dphar.readonly=0 ./ConsoleScript.php --make ./
 before_install:
   - export TZ='Asia/Shanghai'
